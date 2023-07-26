@@ -17,6 +17,7 @@ public class PlayerControll : MonoBehaviour
     private void Start()
     {
         StartCoroutine(Event());
+        StartCoroutine(PickingDeck());
     }
 
     private IEnumerator Event()
@@ -103,4 +104,65 @@ public class PlayerControll : MonoBehaviour
         animator.SetFloat("Speed", value);
     }
 
+    private IEnumerator PickingDeck()
+    {
+        while (true)
+        {
+            GameObject gameObjectDeck = null;
+            yield return new WaitUntil(() => CollidesWithTheDeck(out gameObjectDeck));
+
+            animator.SetBool("IsDeck", true);
+
+            if (gameObjectDeck != null)
+            {
+                Adjustment(gameObjectDeck);
+            }
+
+            yield return new WaitUntil(() => IsTouchingTrigger());
+            Destroy(gameObjectDeck);
+
+            animator.SetBool("IsDeck", false);
+        }
+    }
+
+    private bool CollidesWithTheDeck(out GameObject gameObject)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.5f);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Deck"))
+            {
+                gameObject = collider.gameObject;
+                return true;
+            }
+        }
+
+        gameObject = null;
+        return false;
+    }
+
+    private bool IsTouchingTrigger()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.5f);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Trigger"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void Adjustment(GameObject gameObjectDeck)
+    {
+        gameObjectDeck.GetComponent<Rigidbody>().isKinematic = true;
+        gameObjectDeck.transform.SetParent(transform, true);
+
+        gameObjectDeck.transform.localPosition = new Vector3(-0.043f, 2.735f, 0.286f);
+        gameObjectDeck.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+    }
 }

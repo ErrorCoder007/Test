@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class DamageTree : MonoBehaviour, IDamageTree
 {
+    private TreeControl treeControl => GetComponentInParent<TreeControl>();
     public int Hits { get; set; } = 2;
 
     public void Damage(int value)
     {
         Hits -= value;
 
-        if (Hits < 0)
+        if (Hits <= 0)
         {
             Hits = 0;
+            treeControl.DestructionOfTheTree(gameObject);
         }
 
+        treeControl.DeckControl(gameObject);
     }
 }

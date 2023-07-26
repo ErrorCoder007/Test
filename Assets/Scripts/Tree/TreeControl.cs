@@ -4,54 +4,62 @@ using UnityEngine;
 
 public class TreeControl : MonoBehaviour
 {
-    [Header("Params")]
-    [SerializeField] private float _interactionDistance = 1.0f;
+    [Header("Prefabs")]
+    [SerializeField] private GameObject _prefabsDeck;
 
-    private Animator animator => GetComponent<Animator>();
+    private GameObject player => GameObject.FindWithTag("Player");
 
-    private void Start()
+    public void DestructionOfTheTree(GameObject gameObjectTree)
     {
-        // StartCoroutine("CollisionToTree");
+        StartCoroutine(Destruction(gameObjectTree));
     }
 
-    private IEnumerator FindATree()
+    private IEnumerator Destruction(GameObject gameObjectTree)
     {
-        while (true)
-        {
-            Ray ray = new Ray(transform.position, transform.forward);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, _interactionDistance))
-            {
-                if (hit.transform.gameObject.CompareTag("Tree"))
-                {
-                    GameObject gameObjectTree = hit.transform.gameObject;
-
-                    IDamageTree iDamageTree = gameObjectTree.GetComponent<DamageTree>();
-                    iDamageTree.Damage(1);
-
-                    yield return new WaitForSeconds(0.8f);
-
-                    if (iDamageTree.Hits == 0)
-                    {
-                        StartCoroutine(Events(gameObjectTree));
-                    }
-                }
-            }
-
-            yield return new WaitForFixedUpdate();
-        }
-    }
-
-    private IEnumerator Events(GameObject gameObjectTree)
-    {
-        IDamageTree iDamageTree = gameObjectTree.GetComponent<DamageTree>();
-
         gameObjectTree.SetActive(false);
 
         yield return new WaitForSeconds(15.0f);
 
         gameObjectTree.SetActive(true);
-        iDamageTree.Hits = 2;
+        gameObjectTree.GetComponent<DamageTree>().Hits = 2;
     }
+
+    public void DeckControl(GameObject gameObjectTree)
+    {
+        Vector3 treePosition = gameObjectTree.transform.position;
+        treePosition.y += 1.5f;
+
+        GameObject deck = Instantiate(_prefabsDeck, treePosition, Quaternion.identity);
+        // StartCoroutine(PickingDeck(deck));
+
+        Vector3 deckPosition = deck.transform.position;
+        deckPosition.y += 1f;
+
+        deck.GetComponent<Rigidbody>().AddForceAtPosition(Random.onUnitSphere * 5.0f, deckPosition, ForceMode.Impulse);
+    }
+
+    // private IEnumerator PickingDeck(GameObject deck)
+    // {
+    //     float startTime = Time.time;
+    //     float timeOfLastUpdate = Time.time;
+
+    //     while ((timeOfLastUpdate - startTime) < 30.0f)
+    //     {
+    //         Collider[] collider = Physics.OverlapSphere(deck.transform.position, 0.1f);
+
+    //         foreach (Collider collider1 in collider)
+    //         {
+    //             if (collider1.gameObject.CompareTag("Player"))
+    //             {
+    //                 Destroy(deck);
+    //                 yield break;
+    //             }
+    //         }
+
+    //         timeOfLastUpdate = Time.time;
+    //         yield return null;
+    //     }
+
+    //     Destroy(deck);
+    // }
 }
