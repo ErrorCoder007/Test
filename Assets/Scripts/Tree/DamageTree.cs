@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageTree : MonoBehaviour, IDamageTree
+public class DamageTree : MonoBehaviour
 {
     private TreeControl treeControl => GetComponentInParent<TreeControl>();
-    public int Hits { get; set; } = 2;
+    public int Hits = 2;
 
     public void Damage(int value)
     {

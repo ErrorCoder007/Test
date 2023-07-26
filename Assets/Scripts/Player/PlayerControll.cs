@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerControll : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerControll : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private FixedJoystick _fixedJoystick;
+    [SerializeField] private TMP_Text _textMeshPro;
     private Rigidbody rigidbodyPlayer => GetComponent<Rigidbody>();
     private Animator animator => GetComponent<Animator>();
 
@@ -106,6 +108,7 @@ public class PlayerControll : MonoBehaviour
 
     private IEnumerator PickingDeck()
     {
+        int deckCount = 0;
         while (true)
         {
             GameObject gameObjectDeck = null;
@@ -122,6 +125,9 @@ public class PlayerControll : MonoBehaviour
             Destroy(gameObjectDeck);
 
             animator.SetBool("IsDeck", false);
+
+            deckCount += 1;
+            _textMeshPro.text = deckCount.ToString();
         }
     }
 
