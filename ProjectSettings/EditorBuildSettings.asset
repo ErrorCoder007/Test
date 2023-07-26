@@ -6,7 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Package/Arcade Idle Components/Example Game/Scenes/Main.unity
-    guid: 95fe17c778366d542af8ce1168869ba8
+    path: Assets/Scenes/SampleScene.unity
+    guid: c850ee8c3b14cc8459e7e186857cf567
   m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: ce6211630aa892b43ac4f8ce44760df1, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: a9157d1b2a0323948b703f18ef6d2a62, type: 2}
